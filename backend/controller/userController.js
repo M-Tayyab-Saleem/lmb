@@ -48,5 +48,6 @@ exports.logout = async(req,res)=>{
 
 //get user info
 exports.getUser = async(req,res)=>{
+    console.log(req.user)
     res.json({ user: req.user });
 }
