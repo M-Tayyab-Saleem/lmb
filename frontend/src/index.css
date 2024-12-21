@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
+
+body{
+    overflow-x: hidden;
+    font-family: "Poppins", serif;
+    padding-top: 10vh;
+}
+
+a{
+    text-decoration: none;
+    cursor: pointer;
+    line-height: 1;
+    color: inherit;
+}
+
+.container{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.btn{
+    padding: 8px 20px ;
+    border-radius: 2rem;
+    background: #fff;
+    color: #212121;
+    font-size: 16px;
+    border: 0;
+    outline: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-dark{
+    padding: 8px 20px ;
+    border-radius: 2rem;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    border: 1px solid white;
+    outline: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-dark:hover{
+ background-color: white;
+ color: black;   
+}
+
+.btn img{
+    width: 20px;
+    margin-left: 10px;
+}
+
+.btn.dark-btn{
+    background-color: #212EA0;
+    color: #fff;
+}
+
+
+/* -------------media queries --------------- */
+
+@media (max-width: 1200px) {
+    .container{
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    .btn{
+        padding: 12px 22px;
+    }
+
+}
+
+@layer components{
+    label{
+        @apply block text-xs uppercase font-semibold mb-2
+    }
+    input, textarea {
+        @apply bg-transparent py-3 px-6 text-black border border-neutral-600 rounded-lg
+    }
+}
+
