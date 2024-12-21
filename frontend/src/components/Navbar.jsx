@@ -12,7 +12,7 @@ const Navbar = () => {
 
   useEffect(() => {
     axios
-      .get("https://bookify-cfly.onrender.com/api/authstatus", { withCredentials: true })
+      .get("https://bookify-cfly.onrender.com/api/authstatus")
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
       })
