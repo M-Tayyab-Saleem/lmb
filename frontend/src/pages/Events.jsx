@@ -25,7 +25,7 @@ function Events() {
     //fetchUser
     const fetchUserId = async () => {
       try {
-          const response = await axios.get('/api/getUser', { withCredentials: true });
+          const response = await axios.get('https://bookify-cfly.onrender.com/api/getUser', { withCredentials: true });
           setUserId(response.data.user._id);
       } catch (error) {
           console.error('Error fetching user data:', error.response?.data?.message || error.message);
@@ -40,7 +40,7 @@ function Events() {
   //BookSeats Logic
   const bookSeat = async (eventId) => {
     try {
-      const response = await axios.post(`/api/events/${eventId}/book`);
+      const response = await axios.post(`https://bookify-cfly.onrender.com/api/events/${eventId}/book`);
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 2000,
@@ -64,7 +64,7 @@ function Events() {
   const handleDelete = async (eventId) => {
     try {
       if (window.confirm("Are you sure you want to delete this event?")) {
-        const response = await axios.delete(`/api/events/${eventId}`);
+        const response = await axios.delete(`https://bookify-cfly.onrender.com/api/events/${eventId}`);
         console.log("Response from server:", response.data);
         toast.success("Event Deleted successfully!", {
           position: "top-right",

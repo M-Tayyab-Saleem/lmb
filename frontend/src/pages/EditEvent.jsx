@@ -22,7 +22,7 @@ const EditEvent = ({ event,fetchEvents, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/events/${event._id}`, formData);
+      const response = await axios.put(`https://bookify-cfly.onrender.com/api/events/${event._id}`, formData);
       onClose();
       fetchEvents()
       toast.success(response.data.message, {
