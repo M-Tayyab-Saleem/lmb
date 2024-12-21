@@ -46,9 +46,7 @@ const Navbar = () => {
   //Logout Handle
   const handleLogout = async () => {
     try {
-      await axios.get("https://bookify-cfly.onrender.com/api/logout", {
-        withCredentials: true, 
-      });
+      await axios.get("https://bookify-cfly.onrender.com/api/logout");
       toast.success("You LogOut successfully!", {
               position: "top-right",
               onClose: () => {

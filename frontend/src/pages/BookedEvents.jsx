@@ -41,8 +41,7 @@ const BookedEvents = () => {
   const handleDelete = async (eventId) => {
     try {
         const response = await axios.delete(`https://bookify-cfly.onrender.com/api/events/${eventId}/cancel`, {
-          data: { user: userId }, 
-          withCredentials: true, 
+          data: { user: userId }
       }); 
         console.log("Response from server:", response.data.message);
         toast.success(response.data.message, {

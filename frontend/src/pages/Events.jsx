@@ -25,7 +25,7 @@ function Events() {
     //fetchUser
     const fetchUserId = async () => {
       try {
-          const response = await axios.get('https://bookify-cfly.onrender.com/api/getUser', { withCredentials: true });
+          const response = await axios.get('https://bookify-cfly.onrender.com/api/getUser');
           setUserId(response.data.user._id);
       } catch (error) {
           console.error('Error fetching user data:', error.response?.data?.message || error.message);
