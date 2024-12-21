@@ -18,6 +18,7 @@ const LocalStrategy = require("passport-local");
 
 app.use(cors({
   origin: 'https://bookify-xi.vercel.app', 
+  credentials: true,
 }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
