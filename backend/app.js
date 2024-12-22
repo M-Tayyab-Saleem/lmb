@@ -17,10 +17,11 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 app.use(cors({
-  origin: 'https://bookify-xi.vercel.app',  // Frontend domain in production
-  credentials: true, // Allow cookies/credentials to be sent
+  origin: 'https://bookify-xi.vercel.app',
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie'],
   preflightContinue: false,
   optionsSuccessStatus: 204
 }));
@@ -59,13 +60,15 @@ const sessionOptions = {
   store,
   secret: process.env.SECRET,
   resave: false,
-  saveUninitialized:false,
-  cookie:{
-   expires: Date.now() + 7*24*60*60*1000,
-   maxAge:  7*24*60*60*1000,
-   httpOnly: true,
-   secure: true, 
-   sameSite: 'None'
+  saveUninitialized: true,
+  proxy: true,
+  cookie: {
+    expires: Date.now() + 7*24*60*60*1000,
+    maxAge: 7*24*60*60*1000,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    domain: '.onrender.com'
   }
 };
 
@@ -76,9 +79,6 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-
-
-
 
 //Event Routes
 app.use("/" , eventRoutes)
@@ -103,4 +103,3 @@ app.use((req, res, next) => {
 app.listen(port, () => {
     console.log(`server is listening on port ${port}`);
 });
-  
