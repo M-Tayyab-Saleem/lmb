@@ -26,9 +26,7 @@ function Events() {
     //fetchUser
     const fetchUserId = async () => {
       try {
-          const response = await axios.get(`${API_URL}/api/getUser`, {
-            withCredentials: true,
-          });
+          const response = await axios.get(`${API_URL}/api/getUser`);
           setUserId(response.data.user._id);
       } catch (error) {
           console.error('Error fetching user data:', error.response?.data?.message || error.message);
