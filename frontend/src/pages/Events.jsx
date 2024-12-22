@@ -6,37 +6,53 @@ import { toast } from "react-toastify";
 import editIcon from "../assets/edit.svg";
 import deleteIcon from "../assets/delete.svg";
 import EditEvent from "./EditEvent";
+import { useNavigate } from "react-router-dom";
 
 function Events() {
   const [events, setEvents] = useState([]);
   const [userId, setUserId] = useState(null);
   const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+  const navigate = useNavigate();
 
   //fetch Event
   const fetchEvents = async () => {
-  await axios
-    .get(`${API_URL}/api/events`)
-    .then((response) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/events`, {
+        withCredentials: true
+      });
       setEvents(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    })};
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      toast.error('Failed to load events');
+    }
+  };
 
-    //fetchUser
-    const fetchUserId = async () => {
-      try {
-          const response = await axios.get(`${API_URL}/api/getUser`, {
-            withCredentials: true
-          });
-          if (response.data && response.data.user) {
-            setUserId(response.data.user._id);
-          } else {
-            console.log('No user data available');
-          }
-      } catch (error) {
-          console.error('Error fetching user data:', error.message);
+  //fetchUser
+  const fetchUserId = async () => {
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: `${API_URL}/api/getUser`,
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.data && response.data.user) {
+        setUserId(response.data.user._id);
+      } else {
+        console.log('No user data available');
+        navigate('/login');
       }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      if (error.response?.status === 401) {
+        navigate('/login');
+      } else {
+        toast.error('Failed to fetch user data');
+      }
+    }
   };
 
   useEffect(() => {

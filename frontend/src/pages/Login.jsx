@@ -15,19 +15,16 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const config = {
-      withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
     try {
-      const response = await axios.post(
-        `${API_URL}/api/login`,
-        formData,
-        config
-      );
+      const response = await axios({
+        method: 'POST',
+        url: `${API_URL}/api/login`,
+        data: formData,
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       
       if (response.data) {
         toast.success(response.data.message, {
@@ -40,7 +37,10 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      toast.error(error.response?.data?.message || "Login failed", {
+      const errorMessage = error.response?.data?.message || 
+                          (error.message === 'Network Error' ? 'Server connection failed' : 'Login failed');
+      
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 1500,
       });
