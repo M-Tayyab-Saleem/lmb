@@ -14,13 +14,20 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
     try {
-      const response = await axios({
-        method: 'post',
-        url: `${API_URL}/api/login`,
-        data: formData,
-        withCredentials: true
-      });
+      const response = await axios.post(
+        `${API_URL}/api/login`,
+        formData,
+        config
+      );
       
       if (response.data) {
         toast.success(response.data.message, {

@@ -16,27 +16,31 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
+// CORS Configuration - MUST be first!
+app.use(cors({
+  origin: 'https://bookify-xi.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Accept', 'Authorization']
+}));
+
+// Handle preflight requests
+app.options('*', function(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', 'https://bookify-xi.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
+});
+
 // Basic middleware
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS middleware
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://bookify-xi.vercel.app');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(204).send();
-  }
-  next();
-});
-
 const port = process.env.PORT;
 const dbURL = process.env.ATLAS_DB;
 
+// Database connection
 main()
   .then(() => {
     console.log("connected to db");
@@ -47,6 +51,7 @@ async function main() {
   await mongoose.connect(dbURL);
 }
 
+// Session store setup
 const store = MongoStore.create({
   mongoUrl: dbURL,
   touchAfter: 24*3600,
@@ -55,10 +60,11 @@ const store = MongoStore.create({
   }
 });
 
-store.on("error" , ()=>{
+store.on("error", (err) => {
   console.log("ERROR in MongoDB Session", err);
 });
 
+// Session configuration
 const sessionOptions = {
   store,
   secret: process.env.SECRET,
@@ -73,6 +79,7 @@ const sessionOptions = {
   }
 };
 
+// Session and authentication middleware
 app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -81,26 +88,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//Event Routes
-app.use("/" , eventRoutes);
+// Routes
+app.use("/", eventRoutes);
+app.use("/", userRoutes);
 
-//User Routes
-app.use("/" , userRoutes);
-
-//Authentication Path
-app.get('/api/authstatus', (req, res) => {
-  if (req.isAuthenticated()) {
-      res.status(200).json({ isAuthenticated: true });
-  } else {
-      res.status(200).json({ isAuthenticated: false });
-  }
-});
-
-app.use((req, res, next) => {
-  console.log('Request Origin:', req.headers.origin);
-  next();
-});
-
+// Start server
 app.listen(port, () => {
-    console.log(`server is listening on port ${port}`);
+  console.log(`server is listening on port ${port}`);
 });
