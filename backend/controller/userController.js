@@ -54,9 +54,14 @@ exports.logout = async(req,res)=>{
 }
 
 //get user info
-exports.getUser = async(req,res)=>{
-    if(req.user){
-      return res.json({ user: req.user });  
+exports.getUser = async(req,res) => {
+  try {
+    if (req.isAuthenticated() && req.user) {
+      return res.json({ user: req.user });
     }
-    res.status(400).json({ message: 'user is not logged in ' })
+    return res.status(401).json({ message: 'User is not logged in' });
+  } catch (error) {
+    console.error('Error in getUser:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
 }

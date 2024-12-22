@@ -26,10 +26,16 @@ function Events() {
     //fetchUser
     const fetchUserId = async () => {
       try {
-          const response = await axios.get(`${API_URL}/api/getUser`);
-          setUserId(response.data.user._id);
+          const response = await axios.get(`${API_URL}/api/getUser`, {
+            withCredentials: true
+          });
+          if (response.data && response.data.user) {
+            setUserId(response.data.user._id);
+          } else {
+            console.log('No user data available');
+          }
       } catch (error) {
-          console.error('Error fetching user data:', error.response?.data?.message || error.message);
+          console.error('Error fetching user data:', error.message);
       }
   };
 

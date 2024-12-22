@@ -16,22 +16,18 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-// CORS Configuration - MUST be first!
-app.use(cors({
+const corsOptions = {
   origin: 'https://bookify-xi.vercel.app',
-  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Accept', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Accept', 'Authorization'],
+  credentials: true
+};
 
-// Handle preflight requests
-app.options('*', function(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://bookify-xi.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
+// Enable CORS pre-flight across all routes
+app.options('*', cors(corsOptions));
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 
 // Basic middleware
 app.use(bodyParser.json());
@@ -88,9 +84,24 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Authentication status endpoint
+app.get('/api/authstatus', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ isAuthenticated: true, user: req.user });
+  } else {
+    res.json({ isAuthenticated: false });
+  }
+});
+
 // Routes
 app.use("/", eventRoutes);
 app.use("/", userRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
 
 // Start server
 app.listen(port, () => {
