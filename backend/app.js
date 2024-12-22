@@ -90,6 +90,10 @@ app.get('/api/authstatus', (req, res) => {
   }
 });
 
+app.use((req, res, next) => {
+  console.log('Request Origin:', req.headers.origin);
+  next();
+});
 
 app.listen(port, () => {
     console.log(`server is listening on port ${port}`);
