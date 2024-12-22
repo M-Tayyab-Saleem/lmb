@@ -16,26 +16,18 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-// CORS configuration
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin === 'https://bookify-xi.vercel.app') {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, Origin');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
-
-app.use(cors({
+// CORS configuration - must be before any route handlers
+const corsOptions = {
   origin: 'https://bookify-xi.vercel.app',
-  credentials: true
-}));
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Accept']
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
@@ -69,10 +61,9 @@ const sessionOptions = {
   store,
   secret: process.env.SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   proxy: true,
   cookie: {
-    expires: Date.now() + 7*24*60*60*1000,
     maxAge: 7*24*60*60*1000,
     httpOnly: true,
     secure: true,

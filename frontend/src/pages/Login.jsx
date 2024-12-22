@@ -20,8 +20,7 @@ const Login = () => {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Origin': 'https://bookify-xi.vercel.app'
+          'Accept': 'application/json'
         }
       });
       
