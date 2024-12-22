@@ -87,9 +87,6 @@ app.get('/api/authstatus', (req, res) => {
   }
 });
 
-app.all("*" , (req,res)=>{
-    res.send("page not found")
-})
 
 app.listen(port, () => {
     console.log(`server is listening on port ${port}`);

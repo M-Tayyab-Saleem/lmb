@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const EditEvent = ({ event,fetchEvents, onClose }) => {
+  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+
   const [formData, setFormData] = useState({
     title: event.title,
     description: event.description,
@@ -22,7 +24,7 @@ const EditEvent = ({ event,fetchEvents, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`https://bookify-cfly.onrender.com/api/events/${event._id}`, formData);
+      const response = await axios.put(`${API_URL}/api/events/${event._id}`, formData);
       onClose();
       fetchEvents()
       toast.success(response.data.message, {

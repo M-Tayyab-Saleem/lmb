@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 const SignupForm = () => {
     const [formData, setFormData] = useState({ email: '',username:'', password: '' });
     const navigate = useNavigate()
+    const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,9 +17,8 @@ const SignupForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://bookify-cfly.onrender.com/api/signup', formData, {
+            const response = await axios.post(`${API_URL}/api/signup`, formData, {
                 withCredentials: true, 
-            
             });
             console.log(response.data.message);
             toast.success("You Sign Up Successfully!", {

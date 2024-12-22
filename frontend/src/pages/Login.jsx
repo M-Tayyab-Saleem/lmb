@@ -7,6 +7,7 @@ import {  toast } from "react-toastify";
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,7 +16,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://bookify-cfly.onrender.com/api/login", formData);
+      const response = await axios.post(`${API_URL}/api/login`, formData);
       console.log(response.data.message);
       toast.success(response.data.message, {
         position: "top-right",

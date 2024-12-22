@@ -9,10 +9,11 @@ import { toast } from "react-toastify";
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
 
   useEffect(() => {
     axios
-      .get("https://bookify-cfly.onrender.com/api/authstatus")
+      .get(`${API_URL}/api/authstatus`)
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
       })
@@ -46,7 +47,7 @@ const Navbar = () => {
   //Logout Handle
   const handleLogout = async () => {
     try {
-      await axios.get("https://bookify-cfly.onrender.com/api/logout");
+      await axios.get(`${API_URL}/api/logout`);
       toast.success("You LogOut successfully!", {
               position: "top-right",
               onClose: () => {

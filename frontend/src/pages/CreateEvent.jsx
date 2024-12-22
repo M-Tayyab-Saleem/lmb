@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreateEvent = () => {
+  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+
   const [eventData, setEventData] = useState({
     title: '',
     description: '',
@@ -40,7 +42,7 @@ const CreateEvent = () => {
   }
 
   try {
-      const response = await axios.post('https://bookify-cfly.onrender.com/api/events', eventData);
+      const response = await axios.post(`${API_URL}/api/events`, eventData);
       console.log('Response from server:', response.data);
       toast.success("Event Created successfully!", {
         position: "top-right",
