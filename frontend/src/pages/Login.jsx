@@ -16,7 +16,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/api/login`, formData);
+      const response = await axios.post(`${API_URL}/api/login`, formData, {
+        withCredentials: true,
+      });
       console.log(response.data.message);
       toast.success(response.data.message, {
         position: "top-right",
