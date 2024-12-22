@@ -21,8 +21,6 @@ exports.createEvent = async (req, res) => {
       description,
       location,
       date,
-      capacity,
-      bookedSeats,
       imageURL,
     } = req.body;
     if (
@@ -30,17 +28,18 @@ exports.createEvent = async (req, res) => {
       !description ||
       !location ||
       !date ||
-      !capacity ||
-      !bookedSeats ||
       !imageURL
     ) {
       return res.status(400).json({ error: "All fields are required" });
     }
-    if (capacity < bookedSeats) {
-      return res
-        .status(400)
-        .json({ message: "Booked Seats must be lower than cpacity" });
+
+    const capacity = Number(req.body.capacity);
+    const bookedSeats = Number(req.body.bookedSeats);
+   
+    if (bookedSeats > capacity) {
+      return res.status(400).json({ message: "Booked Seats not must be lower than cpacity" });
     }
+
     const newEvent = new Event({
       title,
       description,

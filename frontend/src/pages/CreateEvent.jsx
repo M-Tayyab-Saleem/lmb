@@ -40,7 +40,7 @@ const CreateEvent = () => {
   }
 
   try {
-      const response = await axios.post('https://bookify-cfly.onrender.com/api/events', eventData);
+      const response = await axios.post('/api/events', eventData);
       console.log('Response from server:', response.data);
       toast.success("Event Created successfully!", {
         position: "top-right",
