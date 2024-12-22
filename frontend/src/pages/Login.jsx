@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import axiosInstance from '../api/axios';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
+  const API_URL = "https://bookify-cfly.onrender.com";
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,18 +16,27 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post('/api/login', formData);
-      console.log(response.data.message);
-      toast.success(response.data.message, {
-        position: "top-right",
-        onClose: () => {
-          navigate('/');
-        },
-        autoClose: 1000,
+      const response = await axios.post(`${API_URL}/api/login`, formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Origin': 'https://bookify-xi.vercel.app'
+        }
       });
+      
+      if (response.data) {
+        toast.success(response.data.message, {
+          position: "top-right",
+          onClose: () => {
+            navigate('/');
+          },
+          autoClose: 1000,
+        });
+      }
     } catch (error) {
-      console.log(error.response?.data?.message || "Login failed");
-      toast.error(error.response?.data?.message, {
+      console.error('Login error:', error);
+      toast.error(error.response?.data?.message || "Login failed", {
         position: "top-right",
         autoClose: 1500,
       });
