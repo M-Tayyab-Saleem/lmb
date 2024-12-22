@@ -16,21 +16,23 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-// CORS configuration - must be before any route handlers
-const corsOptions = {
-  origin: 'https://bookify-xi.vercel.app',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Accept']
-};
-
-app.use(cors(corsOptions));
-
-// Handle preflight requests
-app.options('*', cors(corsOptions));
-
+// Basic middleware
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CORS middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://bookify-xi.vercel.app');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(204).send();
+  }
+  next();
+});
 
 const port = process.env.PORT;
 const dbURL = process.env.ATLAS_DB;
@@ -55,7 +57,7 @@ const store = MongoStore.create({
 
 store.on("error" , ()=>{
   console.log("ERROR in MongoDB Session", err);
-})
+});
 
 const sessionOptions = {
   store,
@@ -80,10 +82,10 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 //Event Routes
-app.use("/" , eventRoutes)
+app.use("/" , eventRoutes);
 
 //User Routes
-app.use("/" , userRoutes)
+app.use("/" , userRoutes);
 
 //Authentication Path
 app.get('/api/authstatus', (req, res) => {
