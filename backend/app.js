@@ -16,11 +16,7 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-app.use(cors({
-  origin: 'https://bookify-1-ecvs.onrender.com', 
-  credentials: true,
-}));
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -86,12 +82,6 @@ app.get('/api/authstatus', (req, res) => {
   } else {
     res.json({ isAuthenticated: false });
   }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({ message: 'Something went wrong!' });
 });
 
 // Start server
