@@ -6,26 +6,30 @@ import { toast } from "react-toastify";
 import editIcon from "../assets/edit.svg";
 import deleteIcon from "../assets/delete.svg";
 import EditEvent from "./EditEvent";
+import { useNavigate } from "react-router-dom";
 
 function Events() {
   const [events, setEvents] = useState([]);
   const [userId, setUserId] = useState(null);
+  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+  const navigate = useNavigate();
 
   //fetch Event
   const fetchEvents = async () => {
   await axios
-    .get("https://github.com/M-Tayyab-Saleem/Bookify.git/api/events")
+    .get(`${API_URL}/api/events`)
     .then((response) => {
       setEvents(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    })};
+    }).catch((error) =>{
+      console.error('Error fetching events:', error)
+      toast.error('Failed to load events')
+    }) 
+  };
 
     //fetchUser
     const fetchUserId = async () => {
       try {
-          const response = await axios.get('https://bookify-cfly.onrender.com/api/getUser', { withCredentials: true });
+          const response = await axios.get(`${API_URL}/api/getUser`, { withCredentials: true });
           setUserId(response.data.user._id);
       } catch (error) {
           console.error('Error fetching user data:', error.response?.data?.message || error.message);
@@ -40,7 +44,7 @@ function Events() {
   //BookSeats Logic
   const bookSeat = async (eventId) => {
     try {
-      const response = await axios.post(`https://bookify-cfly.onrender.com/api/events/${eventId}/book`);
+      const response = await axios.post(`${API_URL}/api/events/${eventId}/book`);
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 2000,
@@ -64,7 +68,7 @@ function Events() {
   const handleDelete = async (eventId) => {
     try {
       if (window.confirm("Are you sure you want to delete this event?")) {
-        const response = await axios.delete(`https://bookify-cfly.onrender.com/api/events/${eventId}`);
+        const response = await axios.delete(`${API_URL}/api/events/${eventId}`);
         console.log("Response from server:", response.data);
         toast.success("Event Deleted successfully!", {
           position: "top-right",

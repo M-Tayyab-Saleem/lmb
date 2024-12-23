@@ -6,11 +6,12 @@ import deleteIcon from "../assets/delete.svg";
 const BookedEvents = () => {
   const [bookedEvents, setBookedEvents] = useState([]);
   const [userId, setUserId] = useState(null);
+  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
   
   //Fetch bookedEvents
   const fetchBookedEvents = async () => {
     try {
-      const response = await axios.get("https://bookify-cfly.onrender.com/api/events/booked");
+      const response = await axios.get(`${API_URL}/api/events/booked`);
       setBookedEvents(response.data);
     } catch (error) {
       console.error("Error fetching booked events:", error);
@@ -24,7 +25,7 @@ const BookedEvents = () => {
   //get user id
   const fetchUserId = async () => {
     try {
-        const response = await axios.get('https://bookify-cfly.onrender.com/api/getUser', { withCredentials: true });
+        const response = await axios.get(`${API_URL}/api/getUser`, { withCredentials: true });
         setUserId(response.data.user._id);
     } catch (error) {
         console.error('Error fetching user data:', error.response?.data?.message || error.message);

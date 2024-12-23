@@ -16,13 +16,18 @@ const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://bookify-xi.vercel.app', 
+  credentials: true,
+}));
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-const port = process.env.PORT;
+const port = process.env.PORT || 8080;
 const dbURL = process.env.ATLAS_DB;
 
+// Database connection
 main()
   .then(() => {
     console.log("connected to db");
@@ -33,6 +38,7 @@ async function main() {
   await mongoose.connect(dbURL);
 }
 
+// Session store setup
 const store = MongoStore.create({
   mongoUrl: dbURL,
   touchAfter: 24*3600,
@@ -41,22 +47,26 @@ const store = MongoStore.create({
   }
 });
 
-store.on("error" , ()=>{
+store.on("error", (err) => {
   console.log("ERROR in MongoDB Session", err);
-})
+});
 
+// Session configuration
 const sessionOptions = {
   store,
   secret: process.env.SECRET,
   resave: false,
-  saveUninitialized:true,
-  cookie:{
-   expires: Date.now() + 7*24*60*60*1000,
-   maxAge:  7*24*60*60*1000,
-   httpOnly: true
+  saveUninitialized: false,
+  proxy: true,
+  cookie: {
+    maxAge: 7*24*60*60*1000,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None'
   }
 };
 
+// Session and authentication middleware
 app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -65,29 +75,26 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Routes
+app.use("/", userRoutes);
+app.use("/", eventRoutes);
 
-
-
-//Event Routes
-app.use("/" , eventRoutes)
-
-//User Routes
-app.use("/" , userRoutes)
-
-//Authentication Path
+// Authentication status endpoint
 app.get('/api/authstatus', (req, res) => {
   if (req.isAuthenticated()) {
-      res.status(200).json({ isAuthenticated: true });
+    res.json({ isAuthenticated: true, user: req.user });
   } else {
-      res.status(200).json({ isAuthenticated: false });
+    res.json({ isAuthenticated: false });
   }
 });
 
-app.all("*" , (req,res)=>{
-    res.send("page not found")
-})
-
-app.listen(port, () => {
-    console.log(`server is listening on port ${port}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ message: 'Something went wrong!' });
 });
-  
+
+// Start server
+app.listen(port, () => {
+  console.log(`server is listening on port ${port}`);
+});

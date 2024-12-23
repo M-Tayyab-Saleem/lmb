@@ -23,18 +23,25 @@ exports.signupUser = async (req, res) => {
 exports.loginUser = async (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
-            return res.status(500).json({ message: 'An error occurred' });
+          console.error('Error during authentication:', err);
+          return res.status(500).json({ message: 'An error occurred' });
         }
         if (!user) {
-            return res.status(401).json({ message: info.message }); 
+          console.log('Authentication failed:', info.message);
+          return res.status(401).json({ message: info.message });
         }
+    
         req.logIn(user, (err) => {
-            if (err) {
-                return res.status(500).json({ message: 'Failed to log in' });
-            }
-            res.status(200).json({ message: 'Login successful', user });
+          if (err) {
+            console.error('Failed to log in:', err);
+            return res.status(500).json({ message: 'Failed to log in' });
+          }
+    
+          // Successfully logged in
+          console.log('Logged in user:', user);
+          res.status(200).json({ message: 'Login successful', user });
         });
-    })(req, res, next);
+      })(req, res, next);
 }
 
 
@@ -47,6 +54,14 @@ exports.logout = async(req,res)=>{
 }
 
 //get user info
-exports.getUser = async(req,res)=>{
-    res.json({ user: req.user });
+exports.getUser = async(req,res) => {
+  try {
+    if (req.isAuthenticated() && req.user) {
+      return res.json({ user: req.user });
+    }
+    return res.status(401).json({ message: 'User is not logged in' });
+  } catch (error) {
+    console.error('Error in getUser:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
 }
