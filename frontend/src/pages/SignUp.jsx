@@ -16,7 +16,7 @@ const SignupForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/signup', formData, {
+            const response = await axios.post('https://bookify-cfly.onrender.com/api/signup', formData, {
                 withCredentials: true, 
             
             });

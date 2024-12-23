@@ -12,7 +12,7 @@ const Navbar = () => {
 
   useEffect(() => {
     axios
-      .get("/api/authstatus", { withCredentials: true })
+      .get("https://bookify-cfly.onrender.com/api/authstatus", { withCredentials: true })
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
       })
@@ -46,7 +46,7 @@ const Navbar = () => {
   //Logout Handle
   const handleLogout = async () => {
     try {
-      await axios.get("/api/logout", {
+      await axios.get("https://bookify-cfly.onrender.com/api/logout", {
         withCredentials: true, 
       });
       toast.success("You LogOut successfully!", {
