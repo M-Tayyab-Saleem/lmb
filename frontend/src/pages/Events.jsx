@@ -14,7 +14,7 @@ function Events() {
   //fetch Event
   const fetchEvents = async () => {
   await axios
-    .get("https://bookify-cfly.onrender.com/api/events")
+    .get("/api/events")
     .then((response) => {
       setEvents(response.data);
     })
