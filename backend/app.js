@@ -17,12 +17,12 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const corsOptions = {
-  origin: 'https://bookify-1-ecvs.onrender.com',
+  origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, 
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
