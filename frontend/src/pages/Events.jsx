@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 function Events() {
   const [events, setEvents] = useState([]);
   const [userId, setUserId] = useState(null);
-  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+  const API_URL = "https://bookify2.onrender.com" || 'http://localhost:8080';
   const navigate = useNavigate();
 
   //fetch Event
@@ -29,7 +29,7 @@ function Events() {
     //fetchUser
     const fetchUserId = async () => {
       try {
-          const response = await axios.get(`${API_URL}/api/getUser`);
+          const response = await axios.get(`${API_URL}/api/getUser`, { withCredentials: true });
           setUserId(response.data.user._id);
       } catch (error) {
           console.error('Error fetching user data:', error.response?.data?.message || error.message);

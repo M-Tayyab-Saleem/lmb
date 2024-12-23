@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const EditEvent = ({ event,fetchEvents, onClose }) => {
-  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+  const API_URL = "https://bookify2.onrender.com" || 'http://localhost:8080';
 
   const [formData, setFormData] = useState({
     title: event.title,

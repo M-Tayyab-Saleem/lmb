@@ -6,7 +6,7 @@ import deleteIcon from "../assets/delete.svg";
 const BookedEvents = () => {
   const [bookedEvents, setBookedEvents] = useState([]);
   const [userId, setUserId] = useState(null);
-  const API_URL = "https://bookify-cfly.onrender.com" || 'http://localhost:8080';
+  const API_URL = "https://bookify2.onrender.com" || 'http://localhost:8080';
   
   //Fetch bookedEvents
   const fetchBookedEvents = async () => {
@@ -41,7 +41,7 @@ const BookedEvents = () => {
   //Delete Events
   const handleDelete = async (eventId) => {
     try {
-        const response = await axios.delete(`https://bookify-cfly.onrender.com/api/events/${eventId}/cancel`, {
+        const response = await axios.delete(`https://bookify2.onrender.com/api/events/${eventId}/cancel`, {
           data: { user: userId }, 
           withCredentials: true, 
       }); 

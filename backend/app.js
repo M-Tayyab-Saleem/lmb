@@ -24,8 +24,7 @@ const dbURL = process.env.ATLAS_DB;
 const _dirname = path.resolve()
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: 'https://bookify2.onrender.com',
   credentials: true, 
 };
 

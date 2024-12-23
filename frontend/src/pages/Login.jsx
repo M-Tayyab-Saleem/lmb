@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
-  const API_URL = "https://bookify-cfly.onrender.com";
+  const API_URL = "https://bookify2.onrender.com";
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,7 +14,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const response = await axios.post(`${API_URL}/api/login`, formData, {
         withCredentials: true,
@@ -23,15 +23,18 @@ const Login = () => {
       toast.success(response.data.message, {
         position: "top-right",
         onClose: () => {
-        navigate('/');
+          navigate("/");
         },
         autoClose: 1000,
       });
     } catch (error) {
-      console.error('Login error:', error);
-      const errorMessage = error.response?.data?.message || 
-                          (error.message === 'Network Error' ? 'Server connection failed' : 'Login failed');
-      
+      console.error("Login error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        (error.message === "Network Error"
+          ? "Server connection failed"
+          : "Login failed");
+
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 1500,
@@ -46,8 +49,8 @@ const Login = () => {
           Log In to your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
-          <Link to='/signup' className="text-blue-500">
+          Or{" "}
+          <Link to="/signup" className="text-blue-500">
             create a new account
           </Link>
         </p>
@@ -57,7 +60,10 @@ const Login = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <div className="mt-1">
@@ -73,7 +79,10 @@ const Login = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="mt-1">
