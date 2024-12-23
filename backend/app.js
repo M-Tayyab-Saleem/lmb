@@ -15,6 +15,13 @@ const MongoStore = require('connect-mongo');
 const User = require("./models/user");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const path = require("path");
+
+const port = process.env.PORT || 8080;
+const dbURL = process.env.ATLAS_DB;
+
+
+const _dirname = path.resolve()
 
 const corsOptions = {
   origin: 'http://localhost:5173',
@@ -26,8 +33,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-const port = process.env.PORT || 8080;
-const dbURL = process.env.ATLAS_DB;
 
 // Database connection
 main()
@@ -89,6 +94,11 @@ app.get('/api/authstatus', (req, res) => {
     res.json({ isAuthenticated: false });
   }
 });
+
+app.use(express.static(path.join(_dirname, "/frontend/dist")));
+app.get("*" ,(req,res) =>{
+  res.sendFile(path.resolve(_dirname, "frontend" , "dist" ,"index.html"))
+})
 
 // Start server
 app.listen(port, () => {
