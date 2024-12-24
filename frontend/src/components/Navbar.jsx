@@ -49,7 +49,7 @@ const Navbar = () => {
       await axios.get("https://bookify2.onrender.com/api/logout", {
         withCredentials: true, 
       });
-      toast.success("You LogOut successfully!", {
+      toast.success("You LogOut successfully!" || response.data.message, {
               position: "top-right",
               onClose: () => {
                 navigate('/login');

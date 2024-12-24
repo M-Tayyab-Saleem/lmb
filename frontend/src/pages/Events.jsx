@@ -69,8 +69,7 @@ function Events() {
     try {
       if (window.confirm("Are you sure you want to delete this event?")) {
         const response = await axios.delete(`${API_URL}/api/events/${eventId}`);
-        console.log("Response from server:", response.data);
-        toast.success("Event Deleted successfully!", {
+        toast.success("Event Deleted successfully!" || response.data.message, {
           position: "top-right",
           autoClose: 1500,
         });

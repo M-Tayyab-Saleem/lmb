@@ -24,8 +24,7 @@ const SignupForm = () => {
       const response = await axios.post(`${API_URL}/api/signup`, formData, {
         withCredentials: true,
       });
-      console.log(response.data.message);
-      toast.success("You Sign Up Successfully!", {
+      toast.success("You Sign Up Successfully!" || response.data.message, {
         position: "top-right",
         onClose: () => {
           navigate("/");

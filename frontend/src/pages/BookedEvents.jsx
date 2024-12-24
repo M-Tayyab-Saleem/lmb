@@ -45,7 +45,6 @@ const BookedEvents = () => {
           data: { user: userId }, 
           withCredentials: true, 
       }); 
-        console.log("Response from server:", response.data.message);
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 1500,

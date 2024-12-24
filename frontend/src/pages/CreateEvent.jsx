@@ -43,8 +43,7 @@ const CreateEvent = () => {
 
   try {
       const response = await axios.post(`${API_URL}/api/events`, eventData);
-      console.log('Response from server:', response.data);
-      toast.success("Event Created successfully!", {
+      toast.success("Event Created successfully!" || response.data.message, {
         position: "top-right",
         onClose: () => {
           navigate('/events');

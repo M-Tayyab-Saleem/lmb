@@ -19,7 +19,6 @@ const Login = () => {
       const response = await axios.post(`${API_URL}/api/login`, formData, {
         withCredentials: true,
       });
-      console.log(response.data.message);
       toast.success(response.data.message, {
         position: "top-right",
         onClose: () => {

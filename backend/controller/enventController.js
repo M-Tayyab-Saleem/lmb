@@ -37,7 +37,7 @@ exports.createEvent = async (req, res) => {
     const bookedSeats = Number(req.body.bookedSeats);
    
     if (bookedSeats > capacity) {
-      return res.status(400).json({ message: "Booked Seats not must be lower than cpacity" });
+      return res.status(400).json({ message: "Booked Seats must be lower than cpacity" });
     }
 
     const newEvent = new Event({
