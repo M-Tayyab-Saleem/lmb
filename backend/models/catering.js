@@ -40,6 +40,15 @@ const cateringSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+        status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected', 'completed'],
+        default: 'pending'
+    },
+    adminNotes: {
+        type: String,
+        default: ''
     }
 }, { timestamps: true });
 

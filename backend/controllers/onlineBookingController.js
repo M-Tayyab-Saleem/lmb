@@ -3,6 +3,8 @@ const OnlineBooking = require("../models/onlineBooking");
 // Create new online booking
 exports.createOnlineBooking = async (req, res) => {
     try {
+        console.log(req.body);
+        console.log(req.user);
         const onlineBooking = new OnlineBooking({ ...req.body, user: req.user._id });
         await onlineBooking.save();
         res.status(201).json({ message: "Online booking created successfully", onlineBooking });
@@ -12,6 +14,7 @@ exports.createOnlineBooking = async (req, res) => {
                 message: "This time slot is already booked" 
             });
         }
+        console.error('Error creating online booking:', error);
         res.status(500).json({ message: error.message });
     }
 };

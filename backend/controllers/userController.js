@@ -1,5 +1,7 @@
 const User = require("../models/user");
 const passport = require("passport");
+const crypto = require("crypto");
+const sendEmail = require("../sendEmail");
 
 //signup
 exports.signupUser = async (req, res) => {
@@ -66,6 +68,85 @@ exports.getUser = async(req,res) => {
   }
 }
 
+// Forgot Password - Generate Reset Token
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+    
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      // For security reasons, don't reveal if email exists or not
+      return res.status(200).json({ 
+        message: 'If the email exists, a password reset link has been sent' 
+      });
+    }
+    
+    // Generate reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    
+    // Set token and expiration (1 hour)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    
+    await user.save();
+    
+    // Send email with reset link
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    const emailSubject = 'Password Reset Request';
+    const emailText = `You requested a password reset. Please click the following link to reset your password: ${resetLink}\n\nIf you didn't request this, please ignore this email.`;
+    
+    await sendEmail(user.email, emailSubject, emailText);
+    
+    res.status(200).json({ 
+      message: 'If the email exists, a password reset link has been sent' 
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Reset Password - Validate Token and Update Password
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({ message: 'Password is required' });
+    }
+    
+    // Find user with valid reset token
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+    
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired reset token' });
+    }
+    
+    // Set new password using Passport's method
+    await user.setPassword(password);
+    
+    // Clear reset token fields
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    
+    await user.save();
+    
+    res.status(200).json({ message: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Add this method to your userController.js
 exports.getUserBookings = async (req, res) => {
   try {
@@ -76,21 +157,18 @@ exports.getUserBookings = async (req, res) => {
     const userId = req.user._id;
     
     // Import all models
-    const Event = require("../models/event");
     const Catering = require("../models/catering");
     const EventDecoration = require("../models/eventDecoration");
     const OnlineBooking = require("../models/onlineBooking");
 
     // Fetch all bookings for the user
-    const [eventBookings, cateringBookings, decorationBookings, onlineBookings] = await Promise.all([
-      Event.find({ bookedBy: userId }).populate('createdBy', 'username'),
+    const [cateringBookings, decorationBookings, onlineBookings] = await Promise.all([
       Catering.find({ user: userId }),
       EventDecoration.find({ user: userId }),
       OnlineBooking.find({ user: userId })
     ]);
 
     res.json({
-      events: eventBookings,
       catering: cateringBookings,
       decorations: decorationBookings,
       onlineBookings: onlineBookings

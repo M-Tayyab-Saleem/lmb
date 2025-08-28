@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import SuccessPopup from './SuccessPopup';
 
 const OnlineBookingForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -100,7 +101,7 @@ const OnlineBookingForm = ({ onClose }) => {
       if (error.response && error.response.status === 409) {
         toast.error("This time slot is already booked. Please choose a different date or time slot.");
       } else {
-        toast.error("An error occurred. Please try again later.");
+        toast.error("An error occurred. Please try again later.", error.response?.data?.message );
       }
     } finally {
       setLoading(false);

@@ -125,16 +125,6 @@ const MyBookings = () => {
               All Bookings
             </button>
             <button
-              onClick={() => setActiveTab("events")}
-              className={`px-6 py-2 rounded-full font-semibold transition ${
-                activeTab === "events" 
-                  ? "bg-[#800020] text-[#FFF8E7]" 
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-            >
-              Events ({bookings.events.length})
-            </button>
-            <button
               onClick={() => setActiveTab("catering")}
               className={`px-6 py-2 rounded-full font-semibold transition ${
                 activeTab === "catering" 

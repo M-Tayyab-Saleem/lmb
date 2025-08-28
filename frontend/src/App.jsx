@@ -13,6 +13,9 @@ import Footer from "./components/Footer";
 import About from "./pages/AboutUs";
 import Services from "./pages/services";
 import MyBookings from "./pages/MyBookings";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
         <Footer />
       </BrowserRouter>

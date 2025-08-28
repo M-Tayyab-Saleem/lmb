@@ -4,6 +4,7 @@ import menu_icon from "../assets/menu-icon.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Logo from "../assets/Logo.png";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -74,7 +75,11 @@ const Navbar = () => {
   return (
     <nav className={`container`}>
       <Link to="/">
-        <p className="logo hover:cursor-pointer text-[#800020]">BML Banquets</p>
+        <img
+          src={Logo}
+          alt="Logo"
+          className="h-[60px] w-auto object-contain cursor-pointer hover:scale-105 transition-transform duration-300"
+        />{" "}
       </Link>
       <ul className={mobileMenu ? "open-menu" : ""}>
         <li>
@@ -87,8 +92,7 @@ const Navbar = () => {
           <Link to="/about">About Us</Link>
         </li>
 
-        <li>
-          <Link to="/my-bookings">My Bookings</Link>
+        <li onClick={() => protectPath("/my-bookings")}>My Bookings
         </li>
 
         {/* <li onClick={() => protectPath("/bookings")}>My Bookings</li> */}
@@ -97,7 +101,7 @@ const Navbar = () => {
         )}
       </ul>
       {isAuthenticated ? (
-        <button className="px-4 py-[10px] rounded-3xl font-medium border border-[#800020] bg-[#800020] text-[#FFF8E7] hover:bg-[#600018] transition-colors duration-200">
+        <button onClick={()=> handleLogout()} className="px-4 py-[10px] rounded-3xl font-medium border border-[#800020] bg-[#800020] text-[#FFF8E7] hover:bg-[#600018] transition-colors duration-200">
           Logout
         </button>
       ) : (

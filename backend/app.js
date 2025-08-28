@@ -5,12 +5,12 @@ if (process.env.NODE_ENV != "production") {
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const Event = require("./models/event");
-const eventRoutes = require('./routes/eventRoutes');
 const userRoutes = require('./routes/userRoutes');
 const onlineBookingRoutes = require('./routes/onlineBookingRoutes');
 const decorationRoutes = require('./routes/decorationRoutes');
 const cateringRoutes = require('./routes/cateringRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require("express-session");
@@ -91,10 +91,11 @@ passport.deserializeUser(User.deserializeUser());
 
 // Routes
 app.use("/", userRoutes);
-app.use("/", eventRoutes);
 app.use("/", cateringRoutes);
 app.use("/", decorationRoutes);
 app.use("/", onlineBookingRoutes);
+app.use("/", adminRoutes);
+
 
 
 // Authentication status endpoint
