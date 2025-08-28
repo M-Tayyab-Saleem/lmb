@@ -1,37 +1,40 @@
 import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import menu_icon from "../assets/menu-icon.png";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState("");
   const navigate = useNavigate();
+  const API_URL = "http://localhost:8080";
 
   useEffect(() => {
     axios
-      .get("https://bookify2.onrender.com/api/authstatus", { withCredentials: true })
+      .get(`${API_URL}/authstatus`, { withCredentials: true })
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
+        // Check user role from localStorage or API response
+        const role = localStorage.getItem("userRole") || "";
+        setUserRole(role);
       })
       .catch((error) => {
         console.error(error);
-        navigate("/login");
       });
   }, [navigate]);
 
   const [mobileMenu, setmobileMenu] = useState(false);
 
-  let toggleMenu = () => {
-    mobileMenu ? setmobileMenu(false) : setmobileMenu(true);
+  const toggleMenu = () => {
+    setmobileMenu(!mobileMenu);
   };
 
-  //To protect create event page
-  let protectPath = (url) => {
+  // To protect create event page
+  const protectPath = (url) => {
     if (!isAuthenticated) {
-      toast.error("Unauthorized, LogIn First", {
+      toast.error("Please login first", {
         position: "top-right",
         onClose: () => {
           navigate("/login");
@@ -43,19 +46,22 @@ const Navbar = () => {
     }
   };
 
-  //Logout Handle
+  // Logout Handle
   const handleLogout = async () => {
     try {
-      await axios.get("https://bookify2.onrender.com/api/logout", {
-        withCredentials: true, 
+      await axios.get(`${API_URL}/api/logout`, {
+        withCredentials: true,
       });
-      toast.success("You LogOut successfully!" || response.data.message, {
-              position: "top-right",
-              onClose: () => {
-                navigate('/login');
-                },
-              autoClose: 2000,
-          });
+      localStorage.removeItem("userRole");
+      toast.success("Logged out successfully!", {
+        position: "top-right",
+        onClose: () => {
+          navigate("/login");
+        },
+        autoClose: 2000,
+      });
+      setIsAuthenticated(false);
+      setUserRole("");
       navigate("/login");
     } catch (error) {
       console.error(
@@ -68,29 +74,43 @@ const Navbar = () => {
   return (
     <nav className={`container`}>
       <Link to="/">
-        <p className="logo hover:cursor-pointer">𝔹𝕠𝕠𝕜𝕚𝕗𝕪</p>
+        <p className="logo hover:cursor-pointer text-[#800020]">BML Banquets</p>
       </Link>
       <ul className={mobileMenu ? "open-menu" : ""}>
         <li>
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/events">Events</Link>
+          <Link to="/services">Our Services</Link>
         </li>
-        <li onClick={()=>protectPath("/createEvent")}>Create Event</li>
-        <li onClick={()=>protectPath("/bookedEvents")}>
-          My Bookings
+        <li>
+          <Link to="/about">About Us</Link>
         </li>
+
+        <li>
+          <Link to="/my-bookings">My Bookings</Link>
+        </li>
+
+        {/* <li onClick={() => protectPath("/bookings")}>My Bookings</li> */}
+        {userRole === "admin" && (
+          <li onClick={() => protectPath("/admin")}>Admin Panel</li>
+        )}
       </ul>
       {isAuthenticated ? (
-        <button className="btn" onClick={handleLogout}>LogOut</button>
+        <button className="px-4 py-[10px] rounded-3xl font-medium border border-[#800020] bg-[#800020] text-[#FFF8E7] hover:bg-[#600018] transition-colors duration-200">
+          Logout
+        </button>
       ) : (
         <div className="flex gap-2">
           <Link to="/signup">
-            <button className="btn">SignUp</button>{" "}
+            <button className="px-4 py-[10px] rounded-3xl font-medium bg-[#800020] text-[#FFF8E7] hover:bg-[#600018] transition-colors duration-200">
+              Sign Up
+            </button>{" "}
           </Link>
           <Link to="/login">
-            <button className="btn">LogIn</button>
+            <button className="px-4 py-[10px] rounded-3xl font-medium bg-[#FFF8E7] text-[#800020] border border-[#800020] hover:bg-[#FFEBC1] transition-colors duration-200">
+              Login
+            </button>{" "}
           </Link>
         </div>
       )}

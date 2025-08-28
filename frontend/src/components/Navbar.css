@@ -1,6 +1,6 @@
 nav{
     color: white;
-    width: 100% ;
+    width: 100%;
     padding: 4px 0;
     display: flex;
     justify-content: space-between;
@@ -10,12 +10,15 @@ nav{
     left: 0;
     z-index: 10;
     max-width: 100% !important;
-    background-color: black;
+    background-color: #FFF8E7;
     height: 10vh;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .logo{
     font-size: 2rem;
+    font-weight: bold;
+    color: #800020;
 }
 
 nav ul{
@@ -29,21 +32,32 @@ nav ul li{
     list-style: none;
     font-size: 16px;
     cursor: pointer;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
+
 nav ul li:hover{
-   text-decoration: underline;
-   text-underline-offset: 10px;
+   color: #800020;
+}
+
+.my-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
 .nav-dark{
-    background-color: black;
+    background-color: #800020;
     transition: 0.5s;
 }
 
 .menu-icon{
     display: none;
 }
-
 
 /* -------------media queries --------------- */
 
@@ -56,27 +70,29 @@ nav ul li:hover{
     }
 }
 
-
 @media (max-width: 840px) {
     nav ul {
         position: fixed;
         top: 0;
         right: -200px;
         bottom: 0;
-        background:black;
+        background: #FFF8E7;
         padding-top: 70px;
         width: 200px;
         z-index: -1;
         flex-direction: column;
         transition: 0.5s;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
     }
     nav ul li{
-        margin: 5px 10px;
+        margin: 15px 10px;
+        color: #333;
     }
     .menu-icon{
         display: block;
         width:40px;
         margin: 1rem 0;
+        cursor: pointer;
     }
     .open-menu{
         right: 0;

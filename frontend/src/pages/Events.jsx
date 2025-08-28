@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 function Events() {
   const [events, setEvents] = useState([]);
   const [userId, setUserId] = useState(null);
-  const API_URL = "https://bookify2.onrender.com" || 'http://localhost:8080';
+  const API_URL ='http://localhost:8080';
   const navigate = useNavigate();
 
   //fetch Event

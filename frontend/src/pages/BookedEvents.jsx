@@ -6,7 +6,7 @@ import deleteIcon from "../assets/delete.svg";
 const BookedEvents = () => {
   const [bookedEvents, setBookedEvents] = useState([]);
   const [userId, setUserId] = useState(null);
-  const API_URL = "https://bookify2.onrender.com" || 'http://localhost:8080';
+  const API_URL = 'http://localhost:8080';
   
   //Fetch bookedEvents
   const fetchBookedEvents = async () => {

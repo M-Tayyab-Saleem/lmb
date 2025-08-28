@@ -8,6 +8,9 @@ const mongoose = require("mongoose");
 const Event = require("./models/event");
 const eventRoutes = require('./routes/eventRoutes');
 const userRoutes = require('./routes/userRoutes');
+const onlineBookingRoutes = require('./routes/onlineBookingRoutes');
+const decorationRoutes = require('./routes/decorationRoutes');
+const cateringRoutes = require('./routes/cateringRoutes');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require("express-session");
@@ -17,6 +20,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const path = require("path");
 
+
 const port = process.env.PORT || 8080;
 const dbURL = process.env.ATLAS_DB;
 
@@ -24,9 +28,13 @@ const dbURL = process.env.ATLAS_DB;
 const _dirname = path.resolve()
 
 const corsOptions = {
-  origin: 'https://bookify2.onrender.com',
-  credentials: true, 
+  origin: [
+    "http://localhost:5173",   // React local dev
+    "https://bookify2.onrender.com" // Production
+  ],
+  credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
@@ -67,8 +75,8 @@ const sessionOptions = {
   cookie: {
     maxAge: 7*24*60*60*1000,
     httpOnly: true,
-    secure: true,
-    sameSite: 'None'
+    secure: process.env.NODE_ENV === "production",
+    sameSite: 'Lax'
   }
 };
 
@@ -84,9 +92,13 @@ passport.deserializeUser(User.deserializeUser());
 // Routes
 app.use("/", userRoutes);
 app.use("/", eventRoutes);
+app.use("/", cateringRoutes);
+app.use("/", decorationRoutes);
+app.use("/", onlineBookingRoutes);
+
 
 // Authentication status endpoint
-app.get('/api/authstatus', (req, res) => {
+app.get('/authstatus', (req, res) => {
   if (req.isAuthenticated()) {
     res.json({ isAuthenticated: true, user: req.user });
   } else {

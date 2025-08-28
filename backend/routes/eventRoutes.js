@@ -1,7 +1,9 @@
 const express = require('express');
-const { createEvent, getEvents, bookSeat , bookedEvents, deleteEvents, editEvents, cancelBooking} = require('../controller/enventController');
+const { createEvent, getEvents, bookSeat , bookedEvents, deleteEvents, editEvents, cancelBooking} = require('../controllers/enventController');
 const router = express.Router();
-const {isLoggedIn , eventValidator} = require("../middleware")
+const { isLoggedIn } = require("../middleware/authMiddleware");
+
+const { eventValidator} = require("../middleware")
 
 router.get('/api/events', getEvents);          // List all events
 router.post('/api/events', isLoggedIn, eventValidator, createEvent);  // Create an event
